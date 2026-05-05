@@ -1,0 +1,57 @@
+# -------------------- EXTRACTION --------------------
+data = pd.read_csv("/content/sales_data(1).csv")
+data.head()
+
+# -------------------- TRANSFORMATION --------------------
+
+# Check missing values
+data.isnull().sum()
+
+# Handle missing values (simple)
+data = data.dropna()
+
+# Convert date
+data['Sale_Date'] = pd.to_datetime(data['Sale_Date'])
+
+# Feature engineering
+data['Month'] = data['Sale_Date'].dt.month
+
+# Remove duplicates
+data = data.drop_duplicates()
+
+# Aggregation
+monthly_sales = data.groupby('Month')['Sales_Amount'].sum()
+
+# -------------------- LOADING --------------------
+data.to_csv('cleaned_data.csv', index=False)
+
+# -------------------- VISUALIZATION --------------------
+
+import matplotlib.pyplot as plt
+
+# Line chart
+monthly_sales.plot()
+plt.title("Monthly Sales Trend")
+plt.xlabel("Month")
+plt.ylabel("Sales Amount")
+plt.show()
+
+# Bar chart
+data.groupby('Product_Category')['Sales_Amount'].sum().plot(kind='bar')
+plt.title("Sales by Product Category")
+plt.xlabel("Category")
+plt.ylabel("Sales Amount")
+plt.show()
+
+# Pie chart
+data.groupby('Region')['Sales_Amount'].sum().plot(kind='pie', autopct='%1.1f%%')
+plt.title("Region-wise Sales Distribution")
+plt.ylabel("")
+plt.show()
+
+# Extra (good addition)
+data.groupby('Product_Category')['Discount'].mean().plot(kind='bar')
+plt.title("Average Discount by Category")
+plt.xlabel("Category")
+plt.ylabel("Discount")
+plt.show()
