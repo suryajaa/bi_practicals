@@ -1,0 +1,32 @@
+// -------------------- DATABASE & COLLECTION --------------------
+use studentDB
+db.createCollection("students")
+
+// -------------------- CREATE (INSERT) --------------------
+db.students.insertOne({roll:101, name:"Alice", marks:89})
+
+db.students.insertMany([
+  {roll:102, name:"Brian", marks:75},
+  {roll:103, name:"Cathy", marks:96},
+  {roll:104, name:"Dan", marks:67}
+])
+
+// -------------------- READ --------------------
+db.students.find().pretty()
+db.students.find({marks: {$gt:75}})
+
+// -------------------- UPDATE --------------------
+db.students.updateOne(
+  {roll:101},
+  {$set: {name:"Alicia"}}
+)
+
+db.students.updateMany(
+  {marks: {$gt:75}},
+  {$set: {grade:"A"}}
+)
+
+// -------------------- DELETE --------------------
+db.students.deleteOne({roll:104})
+
+db.students.deleteMany({marks: {$gt:75}})
